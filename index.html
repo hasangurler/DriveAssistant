@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sürüş Asistanı</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts (Roboto / Digital) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark text-light">
+
+  <div class="container-fluid vh-100 d-flex flex-column justify-content-between py-3">
+    
+    <!-- Üst Bilgi Barı (Rakım ve Kat Edilen Mesafe) -->
+    <div class="row g-2">
+      <div class="col-6">
+        <div class="card card-custom text-center p-2">
+          <span class="card-label">RAKIM</span>
+          <div class="card-value text-info" id="altitude">-- <small class="unit">m</small></div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card card-custom text-center p-2">
+          <span class="card-label">MESAFE (TRIP)</span>
+          <div class="card-value text-warning" id="distance">0.0 <small class="unit">km</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orta Bölüm: Toyota Corolla Tipi Analog + Dijital Kadran -->
+    <div class="row justify-content-center align-items-center flex-grow-1 my-2">
+      <div class="col-12 text-center position-relative d-flex justify-content-center align-items-center">
+        
+        <div class="speedometer-container">
+          <!-- SVG Analog Hız Göstergesi -->
+          <svg viewBox="0 0 300 300" class="speedometer-svg">
+            <!-- Dış Mavi Halka (Toyota Vurgusu) -->
+            <circle cx="150" cy="150" r="135" class="dial-outer-ring" />
+            <circle cx="150" cy="150" r="120" class="dial-bg" />
+            
+            <!-- Kadran Çizgileri ve Rakamlar (JS ile doldurulacak) -->
+            <g id="ticks"></g>
+            <g id="numbers"></g>
+
+            <!-- Analog İbre -->
+            <g id="needle-group">
+              <line x1="150" y1="150" x2="150" y2="45" class="needle" />
+              <circle cx="150" cy="150" r="8" class="needle-cap" />
+            </g>
+          </svg>
+
+          <!-- Dijital Ekran (Kadran Ortasında Toyota MID Ekranı Havası) -->
+          <div class="digital-display">
+            <div class="digital-speed" id="digital-speed">0</div>
+            <div class="speed-unit">km/h</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Alt Kontrol Barı -->
+    <div class="row g-2 align-items-center">
+      <div class="col-8">
+        <div class="card card-custom p-2 text-center">
+          <small class="text-secondary d-block" id="gps-status">GPS Bağlantısı Bekleniyor...</small>
+        </div>
+      </div>
+      <div class="col-4">
+        <button class="btn btn-outline-danger w-100 h-100 fw-bold" id="reset-btn">SIFIRLA</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

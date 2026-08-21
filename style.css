@@ -1,0 +1,123 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #0b0e14 !important;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Corolla Tarzı Neon / Koyu Kart Tasarımı */
+.card-custom {
+  background: rgba(18, 24, 38, 0.85);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.card-label {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #8a99ad;
+  font-weight: 700;
+}
+
+.card-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.unit {
+  font-size: 0.8rem;
+  color: #8a99ad;
+}
+
+/* Speedometer Wrapper */
+.speedometer-container {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1;
+}
+
+.speedometer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(0deg);
+}
+
+/* SVG Stil Elemanları (Toyota Cyan/Blue Vurguları) */
+.dial-bg {
+  fill: #0d121d;
+  stroke: #1a233a;
+  stroke-width: 3;
+}
+
+.dial-outer-ring {
+  fill: none;
+  stroke: #00d2ff;
+  stroke-width: 2;
+  opacity: 0.4;
+}
+
+.tick {
+  stroke: #4a5a70;
+  stroke-width: 2;
+}
+
+.tick-major {
+  stroke: #00d2ff;
+  stroke-width: 3.5;
+}
+
+.tick-text {
+  fill: #e1e6ed;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* İbre */
+#needle-group {
+  transition: transform 0.25s cubic-bezier(0.1, 0.6, 0.2, 1);
+  transform-origin: 150px 150px;
+  transform: rotate(-120deg); /* Başlangıç açısı (0 km/h) */
+}
+
+.needle {
+  stroke: #ff3344;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.needle-cap {
+  fill: #ff3344;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+/* Dijital Hız Göstergesi */
+.digital-display {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.digital-speed {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+  line-height: 1;
+}
+
+.speed-unit {
+  font-size: 0.85rem;
+  color: #00d2ff;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
