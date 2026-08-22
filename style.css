@@ -1,123 +1,118 @@
-body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #0b0e14 !important;
-  overflow: hidden;
-  user-select: none;
+*{box-sizing:border-box}
+:root{
+  --bg:#061b34;
+  --bg2:#031020;
+  --face:#092b4b;
+  --blue:#55b9ef;
+  --blue2:#2d86c5;
+  --white:#fff;
 }
-
-/* Corolla Tarzı Neon / Koyu Kart Tasarımı */
-.card-custom {
-  background: rgba(18, 24, 38, 0.85);
-  border: 1px solid rgba(0, 210, 255, 0.2);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+html,body{width:100%;height:100%;margin:0}
+body{
+  overflow:hidden;
+  color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(circle at 50% 28%,#0e416d 0%,var(--bg) 48%,var(--bg2) 100%);
+  user-select:none;
 }
-
-.card-label {
-  font-size: 0.75rem;
-  letter-spacing: 1px;
-  color: #8a99ad;
-  font-weight: 700;
+.app{
+  width:min(100%,900px);
+  height:100dvh;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  padding:10px 16px max(12px,env(safe-area-inset-bottom));
 }
-
-.card-value {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 700;
+.topbar{
+  flex:0 0 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:rgba(255,255,255,.65);
+  font-size:10px;
+  letter-spacing:2px;
 }
-
-.unit {
-  font-size: 0.8rem;
-  color: #8a99ad;
+.gps-dot{
+  display:inline-block;
+  width:7px;height:7px;border-radius:50%;
+  background:#69c9ff;
+  box-shadow:0 0 8px #69c9ff;
+  margin-right:5px;
 }
-
-/* Speedometer Wrapper */
-.speedometer-container {
-  position: relative;
-  width: 100%;
-  max-width: 340px;
-  aspect-ratio: 1;
+.gauge-area{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-
-.speedometer-svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(0deg);
+#gauge{width:100%;height:auto;max-height:100%;overflow:visible}
+.gauge-face{fill:var(--face);opacity:.94}
+.gauge-arc{fill:none;stroke:var(--blue2);stroke-width:3}
+.tick-major{stroke:var(--blue);stroke-width:3;stroke-linecap:round}
+.tick-minor{stroke:rgba(85,185,239,.62);stroke-width:1.5;stroke-linecap:round}
+.speed-label{fill:#fff;font-size:22px;font-weight:400}
+.needle{
+  stroke:#fff;
+  stroke-width:4;
+  stroke-linecap:round;
+  filter:drop-shadow(0 0 4px rgba(255,255,255,.4));
 }
-
-/* SVG Stil Elemanları (Toyota Cyan/Blue Vurguları) */
-.dial-bg {
-  fill: #0d121d;
-  stroke: #1a233a;
-  stroke-width: 3;
+.digital-speed{
+  fill:#fff;
+  font-size:66px;
+  font-weight:300;
+  text-anchor:middle;
 }
-
-.dial-outer-ring {
-  fill: none;
-  stroke: #00d2ff;
-  stroke-width: 2;
-  opacity: 0.4;
+.digital-unit{
+  fill:rgba(255,255,255,.78);
+  font-size:17px;
+  letter-spacing:3px;
+  text-anchor:middle;
 }
-
-.tick {
-  stroke: #4a5a70;
-  stroke-width: 2;
+.info-row{
+  flex:0 0 auto;
+  display:flex;
+  gap:12px;
+  padding:0;
 }
-
-.tick-major {
-  stroke: #00d2ff;
-  stroke-width: 3.5;
+.info-card{
+  flex:1;
+  min-height:72px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-rows:1fr 18px;
+  padding:8px 14px;
+  border:1px solid rgba(116,192,255,.22);
+  border-radius:12px;
+  background:rgba(6,35,64,.72);
+  backdrop-filter:blur(8px);
 }
-
-.tick-text {
-  fill: #e1e6ed;
-  font-family: 'Roboto', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-anchor: middle;
-  dominant-baseline: central;
+.info-number{align-self:end;font-size:26px;font-weight:300;line-height:1}
+.info-unit{align-self:end;margin-left:6px;color:rgba(255,255,255,.7);font-size:12px}
+.info-label{
+  grid-column:1/3;
+  color:rgba(255,255,255,.48);
+  font-size:9px;
+  letter-spacing:2px;
 }
-
-/* İbre */
-#needle-group {
-  transition: transform 0.25s cubic-bezier(0.1, 0.6, 0.2, 1);
-  transform-origin: 150px 150px;
-  transform: rotate(-120deg); /* Başlangıç açısı (0 km/h) */
+.test-panel{flex:0 0 auto;padding-top:10px}
+.test-panel label{
+  display:block;
+  color:rgba(255,255,255,.4);
+  font-size:9px;
+  letter-spacing:2px;
 }
-
-.needle {
-  stroke: #ff3344;
-  stroke-width: 4;
-  stroke-linecap: round;
+.test-panel input{margin:0}
+#testValue{text-align:center;color:rgba(255,255,255,.5);font-size:11px}
+@media(max-width:576px){
+  .app{padding-left:8px;padding-right:8px}
+  .speed-label{font-size:21px}
+  .digital-speed{font-size:62px}
 }
-
-.needle-cap {
-  fill: #ff3344;
-  stroke: #ffffff;
-  stroke-width: 1.5;
-}
-
-/* Dijital Hız Göstergesi */
-.digital-display {
-  position: absolute;
-  top: 62%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.digital-speed {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 3.2rem;
-  font-weight: 900;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-  line-height: 1;
-}
-
-.speed-unit {
-  font-size: 0.85rem;
-  color: #00d2ff;
-  font-weight: 700;
-  letter-spacing: 1px;
+@media(orientation:landscape) and (max-height:550px){
+  .app{padding-top:4px;padding-bottom:4px}
+  .topbar{flex-basis:22px}
+  .test-panel{display:none}
+  .info-card{min-height:54px}
 }
