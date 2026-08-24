@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#061b34"/>
+
+  <path
+    d="M10 39 A24 24 0 0 1 54 39"
+    fill="none"
+    stroke="#55b9ef"
+    stroke-width="4"
+    stroke-linecap="round"/>
+
+  <path
+    d="M14 39 A20 20 0 0 1 50 39"
+    fill="none"
+    stroke="#2d86c5"
+    stroke-width="2"/>
+
+  <line
+    x1="32"
+    y1="36"
+    x2="43"
+    y2="20"
+    stroke="#ffffff"
+    stroke-width="4"
+    stroke-linecap="round"/>
+
+  <circle
+    cx="32"
+    cy="36"
+    r="3"
+    fill="#ffffff"/>
+
+  <text
+    x="32"
+    y="52"
+    text-anchor="middle"
+    font-family="Arial, sans-serif"
+    font-size="8"
+    fill="#ffffff">DRIVE</text>
+</svg>
