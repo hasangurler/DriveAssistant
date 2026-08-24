@@ -55,7 +55,9 @@ let gpsWatchId = null;
 
 
 // GPS hız filtreleme
-let filteredSpeed = 0;
+let currentSpeed = 0;
+let targetSpeed = 0;
+let lastAnimationTime = performance.now();
 
 
 // Rakım filtreleme
@@ -426,31 +428,67 @@ function setGpsStatus(text, active = false) {
 // GPS HIZ FİLTRELEME
 // =========================================================
 
-function smoothSpeed(newSpeed) {
+function setTargetSpeed(speed) {
 
-    /*
-        Basit exponential moving average.
+    speed = Number(speed);
 
-        Değer büyüdükçe yeni GPS ölçümüne
-        biraz daha hızlı yaklaşır.
+    if (!Number.isFinite(speed)) {
+        speed = 0;
+    }
 
-        0.25:
-        %25 yeni değer
-        %75 önceki değer
-    */
-
-    const alpha = 0.25;
-
-
-    filteredSpeed =
-        filteredSpeed +
-        alpha *
-        (newSpeed - filteredSpeed);
-
-
-    return filteredSpeed;
+    targetSpeed = Math.max(
+        0,
+        Math.min(maxSpeed, speed)
+    );
 }
 
+function animateSpeed(timestamp) {
+
+    const deltaTime =
+        Math.min(
+            0.05,
+            (timestamp - lastAnimationTime) / 1000
+        );
+
+    lastAnimationTime = timestamp;
+
+
+    const difference =
+        targetSpeed - currentSpeed;
+
+
+    /*
+        Hızlı tepki + yumuşak geçiş.
+
+        Değer büyüdükçe ibre hedefe daha hızlı yaklaşır.
+    */
+
+    const response = 12;
+
+
+    const factor =
+        1 - Math.exp(
+            -response * deltaTime
+        );
+
+
+    currentSpeed +=
+        difference * factor;
+
+
+    /*
+        Çok küçük farkları sıfırla.
+    */
+
+    if (Math.abs(targetSpeed - currentSpeed) < 0.05) 
+    {
+        currentSpeed = targetSpeed;
+    }
+
+    updateNeedle(currentSpeed);
+    updateDigitalSpeed(currentSpeed);
+    requestAnimationFrame(animateSpeed);
+}
 
 // =========================================================
 // RAKIM FİLTRELEME
@@ -526,19 +564,11 @@ function handlePosition(position) {
 
 
     // -----------------------------------------------------
-    // HIZ FİLTRELE
+    // HIZ
     // -----------------------------------------------------
 
-    const smoothSpeedValue =
-        smoothSpeed(speedKmh);
-
-
-    // -----------------------------------------------------
-    // GÖSTER
-    // -----------------------------------------------------
-
-    setSpeed(
-        smoothSpeedValue
+    setTargetSpeed(
+        speedKmh
     );
 
 
@@ -672,6 +702,11 @@ function startGps() {
 
 buildGauge();
 
-setSpeed(0);
+currentSpeed = 0;
+targetSpeed = 0;
 
+updateNeedle(0);
+updateDigitalSpeed(0);
+
+requestAnimationFrame(animateSpeed);
 startGps();
