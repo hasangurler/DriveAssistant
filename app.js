@@ -30,6 +30,23 @@ const labelRadius = 202;
 const needleInner = 140;
 const needleOuter = 225;
 
+// =========================================================
+// MESAFE / TRIP
+// =========================================================
+
+let tripDistance = 0;
+
+// Son kabul edilen GPS konumu
+let lastTripPosition = null;
+
+// GPS konumunun mesafeye dahil edilmesi için
+// kabul edilebilir maksimum doğruluk değeri.
+const MAX_GPS_ACCURACY = 30;
+
+// GPS'in küçük oynamalarını yok saymak için minimum hareket.
+// Örneğin araç dururken 2-3 metrelik GPS oynamaları
+// mesafeye eklenmez.
+const MIN_DISTANCE_STEP = 5;
 
 // =========================================================
 // DOM
@@ -37,15 +54,11 @@ const needleOuter = 225;
 
 const ticks = document.getElementById("ticks");
 const labels = document.getElementById("labels");
-
 const needle = document.getElementById("needle");
-
 const digital = document.getElementById("digitalSpeed");
-
 const altitudeElement = document.getElementById("altitude");
-
+const tripElement = document.getElementById("trip");
 const gpsStatus = document.getElementById("gpsStatus");
-
 
 // =========================================================
 // GPS
@@ -82,6 +95,157 @@ function polar(r, a) {
     };
 }
 
+// =========================================================
+// İKİ GPS NOKTASI ARASINDAKİ MESAFE
+// Haversine Formula
+// =========================================================
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+
+    const earthRadius = 6371000; // metre
+
+    const lat1Rad =
+        lat1 * Math.PI / 180;
+
+    const lat2Rad =
+        lat2 * Math.PI / 180;
+
+    const deltaLat =
+        (lat2 - lat1) *
+        Math.PI / 180;
+
+    const deltaLon =
+        (lon2 - lon1) *
+        Math.PI / 180;
+
+
+    const a =
+        Math.sin(deltaLat / 2) *
+        Math.sin(deltaLat / 2) +
+
+        Math.cos(lat1Rad) *
+        Math.cos(lat2Rad) *
+
+        Math.sin(deltaLon / 2) *
+        Math.sin(deltaLon / 2);
+
+
+    const c =
+        2 *
+        Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        );
+
+
+    return earthRadius * c;
+}
+
+// =========================================================
+// TRIP MESAFESİNİ GÜNCELLE
+// =========================================================
+
+function updateTripDistance(position) {
+
+    const coords =
+        position.coords;
+
+
+    // GPS doğruluğu bilinmiyorsa
+    // mesafe hesabına dahil etmiyoruz.
+
+    if (
+        coords.accuracy === null ||
+        !Number.isFinite(coords.accuracy)
+    ) {
+        return;
+    }
+
+
+    // GPS doğruluğu çok kötüyse
+    // bu noktayı kullanma.
+
+    if (
+        coords.accuracy >
+        MAX_GPS_ACCURACY
+    ) {
+        return;
+    }
+
+
+    const currentPosition = {
+
+        latitude:
+            coords.latitude,
+
+        longitude:
+            coords.longitude
+    };
+
+
+    // İlk geçerli GPS noktası.
+    // Burada henüz mesafe eklemiyoruz.
+
+    if (
+        lastTripPosition === null
+    ) {
+
+        lastTripPosition =
+            currentPosition;
+
+        return;
+    }
+
+
+    // Önceki nokta ile mevcut nokta
+    // arasındaki mesafeyi hesapla.
+
+    const distance =
+        calculateDistance(
+
+            lastTripPosition.latitude,
+            lastTripPosition.longitude,
+
+            currentPosition.latitude,
+            currentPosition.longitude
+        );
+
+
+    /*
+        GPS'in küçük oynamalarını
+        mesafeye dahil etme.
+    */
+
+    if (
+        distance <
+        MIN_DISTANCE_STEP
+    ) {
+        return;
+    }
+
+
+    // Mesafeyi metre olarak ekle.
+
+    tripDistance += distance;
+
+
+    // Yeni konumu kaydet.
+
+    lastTripPosition =
+        currentPosition;
+
+
+    // Metre -> kilometre
+
+    const tripKm =
+        tripDistance / 1000;
+
+
+    // Ekranda göster
+
+    tripElement.textContent =
+        tripKm.toFixed(2);
+}
 
 // =========================================================
 // SVG ELEMENT
@@ -97,7 +261,6 @@ function svg(tag, attrs) {
 
     return e;
 }
-
 
 // =========================================================
 // ARC
@@ -537,11 +700,8 @@ function handlePosition(position) {
 
     /*
         coords.speed:
-
         metre / saniye
-
         km/h'ye çevirmek için:
-
         m/s × 3.6
     */
 
@@ -591,6 +751,11 @@ function handlePosition(position) {
             Math.round(altitude);
     }
 
+    // -----------------------------------------------------
+    // MESAFE
+    // -----------------------------------------------------
+
+    updateTripDistance(position);
 
     // -----------------------------------------------------
     // GPS DURUMU
