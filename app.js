@@ -1,6 +1,5 @@
 const NS = "http://www.w3.org/2000/svg";
 
-
 // =========================================================
 // KADRAN AYARLARI
 // =========================================================
@@ -15,7 +14,6 @@ const endAngle = 130;
 
 const arcRadius = 245;
 const labelRadius = 202;
-
 
 // =========================================================
 // İBRE
@@ -57,8 +55,10 @@ const labels = document.getElementById("labels");
 const needle = document.getElementById("needle");
 const digital = document.getElementById("digitalSpeed");
 const altitudeElement = document.getElementById("altitude");
-const tripElement = document.getElementById("trip");
+//const tripElement = document.getElementById("trip");
 const gpsStatus = document.getElementById("gpsStatus");
+const tripGaugeElement = document.getElementById("tripGauge");
+const maxSpeedElement = document.getElementById("maxSpeed");
 
 // =========================================================
 // GPS
@@ -66,12 +66,11 @@ const gpsStatus = document.getElementById("gpsStatus");
 
 let gpsWatchId = null;
 
-
 // GPS hız filtreleme
 let currentSpeed = 0;
 let targetSpeed = 0;
 let lastAnimationTime = performance.now();
-
+let maxRecordedSpeed = 0;
 
 // Rakım filtreleme
 let filteredAltitude = null;
@@ -223,28 +222,20 @@ function updateTripDistance(position) {
         return;
     }
 
-
     // Mesafeyi metre olarak ekle.
-
     tripDistance += distance;
 
-
     // Yeni konumu kaydet.
-
     lastTripPosition =
         currentPosition;
 
-
     // Metre -> kilometre
-
     const tripKm =
         tripDistance / 1000;
 
 
     // Ekranda göster
-
-    tripElement.textContent =
-        tripKm.toFixed(2);
+    tripGaugeElement.textContent = tripKm.toFixed(2);
 }
 
 // =========================================================
@@ -603,6 +594,24 @@ function setTargetSpeed(speed) {
         0,
         Math.min(maxSpeed, speed)
     );
+
+
+    // -----------------------------------------------------
+    // MAX HIZ
+    // -----------------------------------------------------
+
+    if (
+        targetSpeed >
+        maxRecordedSpeed
+    ) {
+
+        maxRecordedSpeed =
+            targetSpeed;
+
+
+        maxSpeedElement.textContent =
+            Math.round(maxRecordedSpeed);
+    }
 }
 
 function animateSpeed(timestamp) {
