@@ -1,4 +1,4 @@
-const CACHE_NAME = "drive-assist-v1";
+const CACHE_NAME = "drive-assist-v2";
 
 const APP_FILES = [
     "./",
@@ -7,7 +7,9 @@ const APP_FILES = [
     "./app.js",
     "./favicon.svg",
     "./manifest.json",
-    "./bootstrap.min.css"
+    "./bootstrap.min.css",
+    "./icons/icon-192.png",
+    "./icons/icon-512.png"
 ];
 
 
