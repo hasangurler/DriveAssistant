@@ -46,6 +46,8 @@ const MAX_GPS_ACCURACY = 30;
 // mesafeye eklenmez.
 const MIN_DISTANCE_STEP = 5;
 
+let wakeLock = null;
+
 // =========================================================
 // DOM
 // =========================================================
@@ -869,6 +871,84 @@ function startGps() {
         );
 }
 
+// =========================================================
+// SCREEN WAKE LOCK
+// =========================================================
+
+let wakeLock = null;
+
+
+async function requestWakeLock() {
+
+    if (!("wakeLock" in navigator)) {
+
+        console.warn(
+            "Screen Wake Lock API desteklenmiyor."
+        );
+
+        return;
+    }
+
+
+    // Zaten aktifse tekrar isteme.
+
+    if (wakeLock !== null) {
+        return;
+    }
+
+
+    try {
+
+        wakeLock =
+            await navigator.wakeLock.request("screen");
+
+
+        console.log(
+            "Ekran açık tutma aktif."
+        );
+
+
+        wakeLock.addEventListener(
+            "release",
+            () => {
+
+                console.log(
+                    "Wake Lock serbest bırakıldı."
+                );
+
+                wakeLock = null;
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Wake Lock alınamadı:",
+            error
+        );
+
+        wakeLock = null;
+    }
+}
+
+
+// =========================================================
+// UYGULAMA TEKRAR GÖRÜNÜR OLDUĞUNDA
+// =========================================================
+
+document.addEventListener(
+    "visibilitychange",
+    async () => {
+
+        if (
+            document.visibilityState === "visible"
+        ) {
+
+            await requestWakeLock();
+        }
+    }
+);
 
 // =========================================================
 // BAŞLAT
@@ -884,6 +964,7 @@ updateDigitalSpeed(0);
 
 requestAnimationFrame(animateSpeed);
 startGps();
+requestWakeLock();
 
 // =========================================================
 // SERVICE WORKER
