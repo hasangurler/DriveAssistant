@@ -872,85 +872,6 @@ function startGps() {
 }
 
 // =========================================================
-// SCREEN WAKE LOCK
-// =========================================================
-
-let wakeLock = null;
-
-
-async function requestWakeLock() {
-
-    if (!("wakeLock" in navigator)) {
-
-        console.warn(
-            "Screen Wake Lock API desteklenmiyor."
-        );
-
-        return;
-    }
-
-
-    // Zaten aktifse tekrar isteme.
-
-    if (wakeLock !== null) {
-        return;
-    }
-
-
-    try {
-
-        wakeLock =
-            await navigator.wakeLock.request("screen");
-
-
-        console.log(
-            "Ekran açık tutma aktif."
-        );
-
-
-        wakeLock.addEventListener(
-            "release",
-            () => {
-
-                console.log(
-                    "Wake Lock serbest bırakıldı."
-                );
-
-                wakeLock = null;
-            }
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Wake Lock alınamadı:",
-            error
-        );
-
-        wakeLock = null;
-    }
-}
-
-
-// =========================================================
-// UYGULAMA TEKRAR GÖRÜNÜR OLDUĞUNDA
-// =========================================================
-
-document.addEventListener(
-    "visibilitychange",
-    async () => {
-
-        if (
-            document.visibilityState === "visible"
-        ) {
-
-            await requestWakeLock();
-        }
-    }
-);
-
-// =========================================================
 // BAŞLAT
 // =========================================================
 
@@ -998,3 +919,76 @@ if ("serviceWorker" in navigator) {
         }
     );
 }
+
+// =========================================================
+// SCREEN WAKE LOCK
+// =========================================================
+
+async function requestWakeLock() {
+
+    if (!("wakeLock" in navigator)) {
+
+        console.log(
+            "Screen Wake Lock API desteklenmiyor."
+        );
+
+        return;
+    }
+
+    if (wakeLock !== null) {
+
+        console.log(
+            "Wake Lock zaten aktif."
+        );
+
+        return;
+    }
+
+    try {
+
+        wakeLock =
+            await navigator.wakeLock.request("screen");
+
+        console.log(
+            "Screen Wake Lock aktif."
+        );
+
+        wakeLock.addEventListener(
+            "release",
+            () => {
+
+                console.log(
+                    "Screen Wake Lock serbest bırakıldı."
+                );
+
+                wakeLock = null;
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Screen Wake Lock alınamadı:",
+            error
+        );
+
+        wakeLock = null;
+    }
+}
+
+// =========================================================
+// WAKE LOCK YENİDEN AL
+// =========================================================
+
+document.addEventListener(
+    "visibilitychange",
+    async () => {
+
+        if (
+            document.visibilityState === "visible"
+        ) {
+
+            await requestWakeLock();
+        }
+    }
+);

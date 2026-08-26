@@ -1,4 +1,4 @@
-const CACHE_NAME = "drive-assist-v3";
+const CACHE_NAME = "drive-assist-v4";
 
 const APP_FILES = [
     "./",
